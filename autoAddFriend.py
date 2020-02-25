@@ -20,7 +20,7 @@ def log(str):
     with open('log.txt','a+') as f:
         logInfo = str_time +  "   " + str
         print(logInfo)
-        f.write(logInfo)
+        f.write(logInfo +"\n")
     
 
 
@@ -30,7 +30,7 @@ def getInfoList(excel_dir,col_list):
     provider_list  = provider_file.values
     print("目前的读取到的数据是")
     print( provider_file.head())
-    log('获取到excel数据，转化为了list')
+    log('获取到excel数据，转化为了list'+"\n")
 
     return provider_list
 
@@ -49,43 +49,64 @@ def addFrined(data):
         try:
             situmatedAdd(applyFormat,remarkName,phoneNum,description)
         except:
-            log(str(phoneNum) + " " +"发生了异常错误")
+            log(str(phoneNum) + " " +"发生了异常错误"+"\n")
             sleep(2)
             continue
 
 
 def situmatedAdd(applyFormat,remarkName,phoneNum,description):
     #使用poco,检测元素，点击，输入，返回
-    poco("com.tencent.mm:id/dlc").click()
-    sleep(2)
-    poco("com.tencent.mm:id/m7").set_text(phoneNum)
-    poco("com.tencent.mm:id/o_").click()
-    sleep(2)
-    if(poco("com.tencent.mm:id/c4s").exists()):
-        log(str(phoneNum)+' '+"该号码没有被注册为微信号或者添加已经频繁了")
+    if(not poco("com.tencent.mm:id/dlc").exists()):
+        log(str(phoneNum)+' '+"添加已经频繁了"+"\n")
+        sleep(2)
         keyevent("4")
+        sleep(50)
     else:
-        if(poco("com.tencent.mm:id/dd").exists()):
-            log(str(phoneNum)+' '+"该号码已经被添加为好友")
+        poco("com.tencent.mm:id/dlc").click()
+        sleep(2)
+        poco("com.tencent.mm:id/m7").set_text(phoneNum)
+        sleep(2)
+        poco("com.tencent.mm:id/o_").click()
+        sleep(2)
+        if(poco("com.tencent.mm:id/c4s").exists()):
+            log(str(phoneNum)+' '+"该号码没有被注册为微信号或者添加已经频繁了"+"\n")
             sleep(2)
-            keyevent("4")            
-            keyevent("4") 
-        else:
-            poco(text="设置备注和标签").click()
-            sleep(2)
-            poco("com.tencent.mm:id/b_q").set_text(remarkName)
-            poco("com.tencent.mm:id/ba1").set_text(description)
-            sleep(2)
-            poco("android.support.v7.widget.LinearLayoutCompat").click()
-            sleep(2)
-            poco("com.tencent.mm:id/d9").click()
-            sleep(2)
-            poco("com.tencent.mm:id/ejg").set_text(applyFormat)
-            poco("com.tencent.mm:id/ln").click()
-            sleep(2)
-            keyevent("4")            
             keyevent("4")
-            sleep(60)
+        else:
+            if(poco("com.tencent.mm:id/dd").exists()):
+                log(str(phoneNum)+' '+"该号码已经被添加为好友"+"\n")
+                sleep(2)
+                keyevent("4")     
+                sleep(2)
+                keyevent("4") 
+                sleep(2)
+            else:
+                poco(text="设置备注和标签").click()
+                sleep(2)
+                poco("com.tencent.mm:id/b_q").set_text(remarkName)
+                poco("com.tencent.mm:id/ba1").set_text(description)
+                sleep(2)
+                poco("android.support.v7.widget.LinearLayoutCompat").click()
+                sleep(2)
+                poco("com.tencent.mm:id/d9").click()
+                sleep(2)
+                if(poco("com.tencent.mm:id/fbi").exists()):
+                    log(str(phoneNum)+' '+"该号码不需要申请，也可以自动添加" +"\n")
+                    sleep(2)
+                    keyevent("4")     
+                    sleep(2)
+                    keyevent("4") 
+                    sleep(2)
+                else:
+                    sleep(2)
+                    poco("com.tencent.mm:id/ejg").set_text(applyFormat)
+                    sleep(2)
+                    poco("com.tencent.mm:id/ln").click()
+                    sleep(2)
+                    keyevent("4")            
+                    sleep(2)
+                    keyevent("4")
+                    sleep(60)
 
 
 
